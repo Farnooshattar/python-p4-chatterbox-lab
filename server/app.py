@@ -14,9 +14,11 @@ migrate = Migrate(app, db)
 
 db.init_app(app)
 
+
 @app.route('/')
 def index():
     return "you can handle messages here"
+
 
 @app.route('/messages', methods=['GET', 'POST'])
 def messages():
@@ -27,15 +29,15 @@ def messages():
             messages.append(message_dict)
 
         response = make_response(
-        messages,
-        200
-    )
+            messages,
+            200
+        )
         return response
     elif request.method == 'POST':
         new_message = Message(
             body=request.form.get("body"),
             username=request.form.get("username"),
-                    )
+        )
 
         db.session.add(new_message)
         db.session.commit()
@@ -48,6 +50,7 @@ def messages():
         )
 
         return response
+
 
 @app.route('/messages/<int:id>', methods=['GET', 'PATCH', 'DELETE'])
 def messages_by_id(id):
@@ -95,7 +98,7 @@ def messages_by_id(id):
 
             response_body = {
                 "delete_successful": True,
-                "message": "Review deleted."    
+                "message": "Review deleted."
             }
 
             response = make_response(
