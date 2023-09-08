@@ -34,9 +34,10 @@ def messages():
         )
         return response
     elif request.method == 'POST':
+        json_info = request.get_json()
         new_message = Message(
-            body=request.form.get("body"),
-            username=request.form.get("username"),
+            body=json_info["body"],
+            username=json_info["username"],
         )
 
         db.session.add(new_message)
@@ -44,10 +45,7 @@ def messages():
 
         message_dict = new_message.to_dict()
 
-        response = make_response(
-            message_dict,
-            201
-        )
+        response = make_response(jsonify(message_dict), 201)
 
         return response
 
@@ -77,8 +75,8 @@ def messages_by_id(id):
 
         elif request.method == 'PATCH':
             message = Message.query.filter(Message.id == id).first()
-
-            message.body = request.form.get("body")
+            json_info = request.get_json()
+            message.body = json_info["body"]
 
             db.session.add(message)
             db.session.commit()
@@ -86,7 +84,7 @@ def messages_by_id(id):
             message_dict = message.to_dict()
 
             response = make_response(
-                message_dict,
+                jsonify(message_dict),
                 200
             )
 
